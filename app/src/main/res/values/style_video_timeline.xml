@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MyCustomSeekDesign" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressBackgroundTint">#B1B1B1</item>
+        <item name="android:progressTint">#7CB342</item>
+        <item name="android:thumbTint">#111</item>
+    </style>
+
+
+    <style name="MyRangeSliderStyle">
+        <item name="trackColorInactive">#C3C3C3</item>
+        <item name="trackColorActive">#7CB342</item>
+        <item name="thumbColor">@color/black</item>
+        <item name="trackHeight">20dp</item>
+        <item name="thumbRadius">9dp</item>
+        <item name="android:valueFrom">0</item>
+        <item name="android:valueTo">100</item>
+        <item name="values">@array/rangeValue</item>
+    </style>
+</resources>
