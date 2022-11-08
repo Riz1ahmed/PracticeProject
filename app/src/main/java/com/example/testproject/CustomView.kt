@@ -89,7 +89,7 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
 //                "z"
         //""
 
-        drawPath(androidLogoData)
+        drawPath(androidLogoData, Size(108, 108))
 
         /*path.apply {
             addPath("M8 5")
@@ -104,7 +104,8 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
         canvas.drawPath(path, paint)
     }
 
-    private fun drawPath(pathData: String) {
+    private fun drawPath(pathData: String, viewPortSize: Size) {
+        //layoutParams = ViewGroup.LayoutParams(viewPortSize.width, viewPortSize.height)
         Log.d("xyz", "drawPath: $pathData")
         val dataList = splitPathData(pathData)
         dataList.forEach { data ->
@@ -122,20 +123,17 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
     private fun addPath(type: Char, data: List<Float>) {
         logD("type=$type, data=$data")
         when (type) {
-            'm' -> path.rMoveTo(data[0], data[1])
-            'l' -> path.rMoveTo(data[0], data[1])
-            'c' -> path.rCubicTo(data[0], data[1], data[2], data[3], data[4], data[5])
+            PathTypes.rMove -> path.rMoveTo(data[0], data[1])
+            PathTypes.rLine -> path.rMoveTo(data[0], data[1])
+            PathTypes.rCubic -> path.rCubicTo(data[0], data[1], data[2], data[3], data[4], data[5])
+            PathTypes.rQuad -> path.rQuadTo(data[0], data[1], data[2], data[3])
 
-            'M' -> path.moveTo(data[0], data[1])
-            'L' -> path.lineTo(data[0], data[1])
-            'C' -> path.cubicTo(data[0], data[1], data[2], data[3], data[4], data[5])
+            PathTypes.move -> path.moveTo(data[0], data[1])
+            PathTypes.line -> path.lineTo(data[0], data[1])
+            PathTypes.cubic -> path.cubicTo(data[0], data[1], data[2], data[3], data[4], data[5])
+            PathTypes.quad -> path.quadTo(data[0], data[1], data[2], data[3])
         }
     }
-    /*fun Path.cubicTo(pathData: String) {
-        val data = pathData.split(" ").map { it.toFloat() * 10 }
-        Log.d("xyz", "cubicTo: $data")
-        path.cubicTo(data[0], data[1], data[2], data[3], data[4], data[5])
-    }*/
 
     private fun splitPathData(fullData: String): ArrayList<Pair<Char, List<Float>>> {
         /**Replace multi space with single space*/
@@ -166,13 +164,11 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
             }
         }
         paths.add(Pair('Z', listOf()))
-        paths.forEach { println(it) }
         return paths
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         //super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        //layoutParams = ViewGroup.LayoutParams(400, 4000)
         setMeasuredDimension(canvasSize.width, canvasSize.height)
     }
 
@@ -187,13 +183,14 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
             "M220.061 293.061C220.646 292.475 220.646 291.525 220.061 290.939L210.515 281.393C209.929 280.808 208.979 280.808 208.393 281.393C207.808 281.979 207.808 282.929 208.393 283.515L216.879 292L208.393 300.485C207.808 301.071 207.808 302.021 208.393 302.607C208.979 303.192 209.929 303.192 210.515 302.607L220.061 293.061ZM142 293.5H219V290.5H142V293.5Z"
 
         //ViewPort 24x24
-        private val pausePath =
+        private const val pausePath =
             "M 8 5C6 5 6 5 6 7L6 17C6 18 6 19 8 19C9 19 10 18 10 17L10 7C10 5 9 5 8 5 Z M16 5C14 5 14 5 14 7L14 17C14 18 14 19 16 19C17 19 18 18 18 17L18 7C18 5 17 5 16 5z"
 
         //viewPort 108x108
-        private val androidLogoData="M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
+        private const val androidLogoData =
+            "M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
 
-
+        //Ref: https://www.w3schools.com/graphics/svg_path.asp
         object PathTypes {
             const val move = 'M'
             const val rMove = 'm'
@@ -201,6 +198,8 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
             const val rLine = 'l'
             const val cubic = 'C'
             const val rCubic = 'c'
+            const val quad = 'Q'
+            const val rQuad = 'q'
             const val hLine = 'H'
             const val rHLine = 'h'
             const val vLine = 'V'
