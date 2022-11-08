@@ -123,15 +123,28 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
     private fun addPath(type: Char, data: List<Float>) {
         logD("type=$type, data=$data")
         when (type) {
-            PathTypes.rMove -> path.rMoveTo(data[0], data[1])
-            PathTypes.rLine -> path.rMoveTo(data[0], data[1])
-            PathTypes.rCubic -> path.rCubicTo(data[0], data[1], data[2], data[3], data[4], data[5])
-            PathTypes.rQuad -> path.rQuadTo(data[0], data[1], data[2], data[3])
-
             PathTypes.move -> path.moveTo(data[0], data[1])
             PathTypes.line -> path.lineTo(data[0], data[1])
+            PathTypes.hLine -> path.lineTo(data[0], 0f)//not 0 will be last pos
+            PathTypes.vLine -> path.lineTo(0f, data[0])//not 0 will be last pos
             PathTypes.cubic -> path.cubicTo(data[0], data[1], data[2], data[3], data[4], data[5])
+            //PathTypes.smoothCubic -> path.rCubicTo(oldQValue,lastQValu,data[0],data[1])
             PathTypes.quad -> path.quadTo(data[0], data[1], data[2], data[3])
+            //PathTypes.smoothQuad -> path.rQuadTo(oldQValue,lastQValu,data[0], data[1])
+            //PathTypes.arc -> path.arc
+            PathTypes.stop -> path.close()
+
+            PathTypes.rMove -> path.rMoveTo(data[0], data[1])
+            PathTypes.rLine -> path.rLineTo(data[0], data[1])
+            PathTypes.rHLine -> path.rLineTo(data[0], 0f)
+            PathTypes.rVLine -> path.rLineTo(0f, data[0])
+            PathTypes.rCubic -> path.rCubicTo(data[0], data[1], data[2], data[3], data[4], data[5])
+            //PathTypes.rSmoothCubic -> path.rCubicTo(oldQValue,lastQValu,data[0],data[1])
+            PathTypes.rQuad -> path.rQuadTo(data[0], data[1], data[2], data[3])
+            //PathTypes.rSmoothQuad -> path.rQuadTo(oldQValue,lastQValu,data[0], data[1])
+            //PathTypes.rArc -> path.arcTo()
+            PathTypes.rStop -> path.close()
+
         }
     }
 
@@ -187,23 +200,63 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
             "M 8 5C6 5 6 5 6 7L6 17C6 18 6 19 8 19C9 19 10 18 10 17L10 7C10 5 9 5 8 5 Z M16 5C14 5 14 5 14 7L14 17C14 18 14 19 16 19C17 19 18 18 18 17L18 7C18 5 17 5 16 5z"
 
         //viewPort 108x108
-        private const val androidLogoData =
-            "M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
+        private const val androidLogoData = "" +
+                "M65.3,45.828" +
+                "l3.8,-6.6" +
+                "c0.2,-0.4 0.1,-0.9 -0.3,-1.1" +
+                "c-0.4,-0.2 -0.9,-0.1 -1.1,0.3" +
+                "l-3.9,6.7" +
+                "c-6.3,-2.8 -13.4,-2.8 -19.7,0" +
+                "l-3.9,-6.7" +
+                "c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3" +
+                "C38.8,38.328 38.7,38.828 38.9,39.228" +
+                "l3.8,6.6" +
+                "C36.2,49.428 31.7,56.028 31,63.928" +
+                "h46" +
+                "C76.3,56.028 71.8,49.428 65.3,45.828" +
+                "z" +
+                "M43.4,57.328" +
+                "c-0.8,0 -1.5,-0.5 -1.8,-1.2" +
+                "c-0.3,-0.7 -0.1,-1.5 0.4,-2.1" +
+                "c0.5,-0.5 1.4,-0.7 2.1,-0.4" +
+                "c0.7,0.3 1.2,1 1.2,1.8" +
+                "C45.3,56.528 44.5,57.328 43.4,57.328" +
+                "L43.4,57.328z" +
+                "M64.6,57.328" +
+                "c-0.8,0 -1.5,-0.5 -1.8,-1.2" +
+                "s-0.1,-1.5 0.4,-2.1" +
+                "c0.5,-0.5 1.4,-0.7 2.1,-0.4" +
+                "c0.7,0.3 1.2,1 1.2,1.8" +
+                "C66.5,56.528 65.6,57.328 64.6,57.328" +
+                "L64.6,57.328" +
+                "z"
 
         //Ref: https://www.w3schools.com/graphics/svg_path.asp
+        //Explanation: https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
         object PathTypes {
             const val move = 'M'
             const val rMove = 'm'
+
             const val line = 'L'
             const val rLine = 'l'
-            const val cubic = 'C'
-            const val rCubic = 'c'
-            const val quad = 'Q'
-            const val rQuad = 'q'
             const val hLine = 'H'
             const val rHLine = 'h'
             const val vLine = 'V'
             const val rVLine = 'v'
+
+            const val cubic = 'C'
+            const val rCubic = 'c'
+            const val smoothCubic = 'S'
+            const val rSmoothCubic = 's'
+
+            const val quad = 'Q'
+            const val rQuad = 'q'
+            const val smoothQuad = 'T'
+            const val rSmoothQuad = 't'
+
+            const val arc = 'A'
+            const val rArc = 'a'
+
             const val stop = 'Z'
             const val rStop = 'z'//There hasn't any r. but available in upperCase
         }
