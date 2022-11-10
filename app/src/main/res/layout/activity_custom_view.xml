@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".CustomViewActivity">
 
-    <com.example.testproject.CustomView
+    <com.example.testproject.utilsAndData.CustomView
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
