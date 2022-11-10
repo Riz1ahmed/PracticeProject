@@ -11,11 +11,13 @@ import android.util.AttributeSet
 import android.util.Log
 import android.util.Size
 import android.view.View
+import com.example.testproject.utilsAndData.model.figmaModel.FigmaJson
 
 class CustomView(context: Context, attributeSet: AttributeSet) : View(context, attributeSet) {
 
-    private val scaleSize = 10
-    private val canvasSize = Size(70 * scaleSize, 62 * scaleSize)
+    /**Icon size multiply with this value so that icon scaled up to match size wit canvas*/
+    private var icScale = 10
+    private val canvasSize = Size(400, 400)
     private val bg = ColorDrawable(Color.YELLOW)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         strokeWidth = 5f
@@ -36,55 +38,24 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        //canvas?.drawCircle(40f, 40f, 40f, paint)
-        //canvas?.drawText("$width x $height", 0f, 100f, textPaint)
-
         drawPathData(canvas!!)
     }
 
     private fun drawPathData(canvas: Canvas) {
 
-        /*path.moveTo(68.5F, 35.0F)
-        path.lineTo(78.2664F, 65.0578F)
-        path.lineTo(109.871F, 65.0578F)
-        path.lineTo(84.3023F, 83.6345F)
-        path.lineTo(94.0687F, 113.692F)
-        path.lineTo(68.5F, 95.1155F)
-        path.lineTo(42.9313F, 113.692F)
-        path.lineTo(52.6977F, 83.6345F)
-        path.lineTo(27.129F, 65.0578F)
-        path.lineTo(58.7336F, 65.0578F)
-        path.lineTo(68.5F, 35F)
-        path.close()*/
-
-        /*path.moveTo(5f, 5f)
-        path.lineTo(20f, 5f)
-        path.lineTo(20f, 20f)
-        path.lineTo(5f, 20f)
-
-        path.moveTo(0f, 0f)
-        path.rLineTo(3f, 0f)
-        path.rLineTo(0f, 3f)
-        path.rLineTo(-3f, 0f)
-        path.close()*/
-
-        drawPath(moneyPath, Size(108, 108))
+        drawPath(moneyPath, Size(74, 62))
 
         canvas.drawPath(path, paint)
 
-        /*canvas.drawPath(Path().apply {
-            moveTo(0f, 0f)
-            arcTo(0f, 0f, 80f, 50f, 0f, 90f, false)
-            close()
-        }, paint)*/
+        figmaJson?.document?.children
     }
 
     private fun drawPath(pathData: String, viewPortSize: Size) {
-        //layoutParams = ViewGroup.LayoutParams(viewPortSize.width, viewPortSize.height)
         Log.d("xyz", "drawPath: $pathData")
+        icScale = canvasSize.width / viewPortSize.width
         val dataList = splitPathData(pathData)
         dataList.forEach { data ->
-            addPath(data.first, data.second.map { it * scaleSize })
+            addPath(data.first, data.second.map { it * icScale })
         }
         path.close()
     }
@@ -92,7 +63,7 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
 
     private fun addPath(typeWithData: String) {
         val type = typeWithData.first()
-        addPath(type, typeWithData.drop(1).split(" ").map { it.toFloat() * scaleSize })
+        addPath(type, typeWithData.drop(1).split(" ").map { it.toFloat() * icScale })
     }
 
     private fun addPath(type: Char, data: List<Float>) {
@@ -119,7 +90,6 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
             //PathTypes.rSmoothQuad -> path.rQuadTo(oldQValue,lastQValu,data[0], data[1])
             //PathTypes.rArc -> path.arcTo()
             PathTypes.rStop -> path.close()
-
         }
     }
 
@@ -162,27 +132,19 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
         setMeasuredDimension(canvasSize.width, canvasSize.height)
     }
 
+    private var figmaJson: FigmaJson? = null
+    fun drawJson(figmaJson: FigmaJson) {
+        this.figmaJson = figmaJson
+        invalidate()
+    }
+
     companion object {
 
         /**viewPort 150x150*/
         private const val starPath =
             "M68.5 35L78.2664 65.0578L109.871 65.0578L84.3023 83.6345L94.0687 113.692L68.5 95.1155L42.9313 113.692L52.6977 83.6345L27.129 65.0578L58.7336 65.0578L68.5 35Z"
 
-        /**viewPort 350x340*/
-        private const val arrowPath = "" +
-                //Line
-                "M142.000 293.500" +
-
-                "H219.000" + "V290.500" +
-                //"H142.000" +
-                //"V293.500" +
-
-                "Z" +
-
-                //Head angle
-                "M220.061 293.061" + "C220.646 292.475 220.646 291.525 220.061 290.939" + "L210.515 281.393" + "C209.929 280.808 208.979 280.808 208.393 281.393" + "C207.808 281.979 207.808 282.929 208.393 283.515" + "L216.879 292.000" + "L208.393 300.485" + "C207.808 301.071 207.808 302.021 208.393 302.607" + "C208.979 303.192 209.929 303.192 210.515 302.607" + "L220.061 293.061" + "Z"
-
-        private val clock = "" +
+        private const val clock = "" +
                 "" +
                 "M12,2" +
                 "C6.477,2,2,6.477,2,12" +
