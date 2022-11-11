@@ -1,7 +1,9 @@
 package com.example.testproject
 
+import android.graphics.drawable.PictureDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.caverock.androidsvg.SVG
 import com.example.testproject.databinding.ActivityCustomViewBinding
 import com.example.testproject.utilsAndData.GSonUtils
 import com.example.testproject.utilsAndData.logD
@@ -18,5 +20,13 @@ class CustomViewActivity : AppCompatActivity() {
 
         val json = GSonUtils.fromJson<FigmaJson>(FigmaJs.figmaSample)
         logD("Json: $json")
+
+        loadSvg()
+    }
+
+    private fun loadSvg() {
+        val svg = SVG.getFromAsset(assets, "svg/ic_intro_maker.svg")
+        val pd = PictureDrawable(svg.renderToPicture())
+        binding.imageView.setImageDrawable(pd)
     }
 }
