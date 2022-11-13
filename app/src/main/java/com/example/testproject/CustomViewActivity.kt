@@ -7,7 +7,7 @@ import com.caverock.androidsvg.SVG
 import com.example.testproject.databinding.ActivityCustomViewBinding
 import com.example.testproject.utilsAndData.GSonUtils
 import com.example.testproject.utilsAndData.logD
-import com.example.testproject.utilsAndData.model.FigmaJs
+import com.example.testproject.utilsAndData.data.FigmaJs
 import com.example.testproject.utilsAndData.model.figmaModel.FigmaJson
 
 class CustomViewActivity : AppCompatActivity() {
@@ -18,10 +18,12 @@ class CustomViewActivity : AppCompatActivity() {
         binding = ActivityCustomViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val json = GSonUtils.fromJson<FigmaJson>(FigmaJs.figmaSample)
-        logD("Json: $json")
+        val figmaJson = GSonUtils.fromJson<FigmaJson>(FigmaJs.figmaSample)
+        logD("Json: $figmaJson")
+        binding.customView.drawFromJson(figmaJson)
 
         loadSvg()
+
     }
 
     private fun loadSvg() {

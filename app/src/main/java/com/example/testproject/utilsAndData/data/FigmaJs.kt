@@ -1,4 +1,4 @@
-package com.example.testproject.utilsAndData.model
+package com.example.testproject.utilsAndData.data
 
 object FigmaJs{
   val figmaSample = """

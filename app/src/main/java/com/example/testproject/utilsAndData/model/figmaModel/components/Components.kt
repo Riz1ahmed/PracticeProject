@@ -1,3 +1,3 @@
 package com.example.testproject.utilsAndData.model.figmaModel.components
 
-class Components
+data class Components(val sampleData: Boolean)

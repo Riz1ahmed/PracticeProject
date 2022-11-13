@@ -1,4 +1,4 @@
-package com.example.testproject.utilsAndData.model.figmaModel
+package com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.children
 
 data class AbsoluteRenderBounds(
     val height: Double,

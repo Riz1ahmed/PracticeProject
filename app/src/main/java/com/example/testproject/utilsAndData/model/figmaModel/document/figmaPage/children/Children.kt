@@ -1,6 +1,7 @@
-package com.example.testproject.utilsAndData.model.figmaModel.doument.children
+package com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.children
 
-import com.example.testproject.utilsAndData.model.figmaModel.*
+import com.example.testproject.utilsAndData.model.figmaModel.SizeX
+import com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.children.fillX.FillX
 
 //Frame. Type: FRAME.
 //Group. Type: Group
@@ -10,7 +11,7 @@ data class Children(
     val absoluteRenderBounds: AbsoluteRenderBounds,
     /**Available if it's */
     val background: List<Background>? = null,
-    val backgroundColor: BackgroundColor? = null,
+    val backgroundColor: ColorRGBA? = null,
     val blendMode: String,
     val children: List<Children>,
     val clipsContent: Boolean,
@@ -21,12 +22,21 @@ data class Children(
     val fills: List<FillX>,
     val id: String,
     val name: String,
+    /**
+     * X Transform value from 1st of 3rd value
+     * Y Transform value from 2st of 3rd value
+     * So,
+     * ```
+     *      xTransform = this[0][2]
+     *      yTransform = this[1][2]
+     * ```
+     */
     val relativeTransform: List<List<Double>>,
     val scrollBehavior: String,
     val size: SizeX,
     val strokeAlign: String,
     /**When contain stroke*/
-    val strokeGeometry: List<Any>? = null,
+    val strokeGeometry: List<StrokeGeometry>? = null,
     val strokeWeight: Int,
     val strokes: List<Any>,
     val type: String
