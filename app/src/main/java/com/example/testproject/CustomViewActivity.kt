@@ -25,7 +25,7 @@ class CustomViewActivity : AppCompatActivity() {
     }
 
     private fun loadSvg() {
-        val svg = SVG.getFromAsset(assets, "svg/ic_intro_maker.svg")
+        val svg = SVG.getFromAsset(assets, "svg/recepie.svg")
         val pd = PictureDrawable(svg.renderToPicture())
         binding.imageView.setImageDrawable(pd)
     }
