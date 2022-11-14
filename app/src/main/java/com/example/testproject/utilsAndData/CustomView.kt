@@ -1,16 +1,13 @@
 package com.example.testproject.utilsAndData
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.PointF
+import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.Size
 import android.view.View
+import com.example.testproject.utilsAndData.data.VectorDrawConst
 import com.example.testproject.utilsAndData.model.figmaModel.FigmaJson
 import com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.children.Children
 
@@ -18,6 +15,10 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
 
     /**Icon size multiply with this value so that icon scaled up to match size wit canvas*/
     //private var icScale = 10
+
+    //Draw using this FigmaJson
+    private var fJson: FigmaJson? = null
+
     private val canvasSize = Size(400, 400)
     private val bg = ColorDrawable(Color.YELLOW)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -32,54 +33,66 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
     }
     //private val path = Path()
 
-    init { background = bg }
+    init {
+        background = bg
+    }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        drawPathData(canvas!!)
+        //drawPathData(canvas!!)
+        fJson?.let { canvas?.let { drawFromJson(fJson!!, canvas) } }
     }
 
-    private fun drawPathData(canvas: Canvas) {
-
-        val pathData = CanvasUtils.getPathData(instaPath, instaAbsPos, width)
-
-        pathDrawOnCanvas(canvas, pathData)
+    private fun drawFromJson(figmaJson: FigmaJson, canvas: Canvas) {
+        //val json = GSonUtils.fromJson<FigmaJson>(FigmaJs.figmaSample)
+        figmaJson.get1stPage().children.forEach { findPathData(it, canvas) }
     }
 
-    private fun pathDrawOnCanvas(canvas: Canvas, path: Path) {
-        //icScale = canvasSize.width / pathAreaSize.width
-        canvas.drawPath(path, paint)
+    private fun findPathData(children: Children, canvas: Canvas) {
+        if (children.type == VectorDrawConst.ChildType.VECTOR) {
+
+            logD("Details about vector=${children.name}")
+
+            val fillGeometry = children.get1stGeometricPath()!!
+            val fillColor = children.get1stSolidBgColor()
+            val lrBound = children.getTLMargin()
+            drawPathData(fillGeometry, lrBound, fillColor ?: Color.BLACK, canvas)
+
+
+            val strokeGeometry = children.strokeGeometry
+            // TODO: Please draw using these geometric data.
+
+            logD("fillGeometry: $fillGeometry")
+            logD("Color: $fillColor")
+            logD("strokeGeometry: $strokeGeometry")
+        } else {
+            children.children.forEach { findPathData(it, canvas) }
+        }
     }
 
+    /**
+     * @param pathData It's coded pathData. ex: 'M12.0 0 L15 2....'
+     * @param lrMargin Left and Top margin/transition where draw this path.
+     * @param color With which color to draw this path.
+     * */
+    private fun drawPathData(pathData: String, lrMargin: PointF, color: Int, canvas: Canvas) {
+        val path = CanvasUtils.getPathFromPathData(pathData, lrMargin)
+        pathDrawOnCanvas(canvas, path, color)
+    }
+
+    private fun pathDrawOnCanvas(canvas: Canvas, path: Path, color: Int) {
+        canvas.drawPath(path, paint.also { it.color = color })
+    }
+
+    fun setJsonInvalidate(figmaJson: FigmaJson) {
+        fJson = figmaJson
+        invalidate()
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         //super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         setMeasuredDimension(canvasSize.width, canvasSize.height)
-    }
-
-    fun drawFromJson(figmaJson: FigmaJson) {
-        //val json = GSonUtils.fromJson<FigmaJson>(FigmaJs.figmaSample)
-
-        figmaJson.getPage().children.forEach {
-            findPathData(it)
-        }
-    }
-
-    private fun findPathData(children: Children) {
-        if (children.type == FigmaJson.ChildType.VECTOR) {
-            val fillGeometry = children.fillGeometry!![0]
-            val strokeGeometry = children.strokeGeometry
-
-            logD("fillGeometry: $fillGeometry")
-            logD("strokeGeometry: $strokeGeometry")
-        } else children.children.forEach { findPathData(it) }
-    }
-
-    private var figmaJson: FigmaJson? = null
-    fun drawJson(figmaJson: FigmaJson) {
-        this.figmaJson = figmaJson
-        invalidate()
     }
 
     companion object {
@@ -292,32 +305,5 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
 
         //Ref: https://www.w3schools.com/graphics/svg_path.asp
         //Explanation: https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
-        object PathTypes {
-            const val move = 'M'
-            const val rMove = 'm'
-
-            const val line = 'L'
-            const val rLine = 'l'
-            const val hLine = 'H'
-            const val rHLine = 'h'
-            const val vLine = 'V'
-            const val rVLine = 'v'
-
-            const val cubic = 'C'
-            const val rCubic = 'c'
-            const val smoothCubic = 'S'
-            const val rSmoothCubic = 's'
-
-            const val quad = 'Q'
-            const val rQuad = 'q'
-            const val smoothQuad = 'T'
-            const val rSmoothQuad = 't'
-
-            const val arc = 'A'
-            const val rArc = 'a'
-
-            const val stop = 'Z'
-            const val rStop = 'z'//There hasn't any r. but available in upperCase
-        }
     }
 }

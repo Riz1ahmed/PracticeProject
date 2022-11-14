@@ -1,7 +1,3 @@
-package com.example.testproject.utilsAndData.data
-
-object FigmaJs{
-  val figmaSample = """
 {
   "document": {
     "id": "0:0",
@@ -1669,5 +1665,3 @@ object FigmaJs{
   "editorType": "figma",
   "linkAccess": "view"
 }
-  """
-  }

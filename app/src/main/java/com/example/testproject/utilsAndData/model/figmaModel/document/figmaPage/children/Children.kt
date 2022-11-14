@@ -1,7 +1,12 @@
 package com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.children
 
+import android.graphics.Color
+import android.graphics.PointF
+import com.example.testproject.utilsAndData.data.VectorDrawConst
+import com.example.testproject.utilsAndData.logD
 import com.example.testproject.utilsAndData.model.figmaModel.SizeX
 import com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.children.fillX.FillX
+import com.example.testproject.utilsAndData.toColorInt
 
 //Frame. Type: FRAME.
 //Group. Type: Group
@@ -9,7 +14,7 @@ import com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.
 data class Children(
     val absoluteBoundingBox: AbsoluteBoundingBox,
     val absoluteRenderBounds: AbsoluteRenderBounds,
-    /**Available if it's */
+    /**Available if it's [VectorDrawConst.ChildType.VECTOR] type*/
     val background: List<Background>? = null,
     val backgroundColor: ColorRGBA? = null,
     val blendMode: String,
@@ -17,7 +22,7 @@ data class Children(
     val clipsContent: Boolean,
     val constraints: ConstraintsX,
     val effects: List<Any>,
-    /**Available if It's item*/
+    /**Available if it's [VectorDrawConst.ChildType.VECTOR] type*/
     val fillGeometry: List<FillGeometry>? = null,
     val fills: List<FillX>,
     val id: String,
@@ -39,5 +44,21 @@ data class Children(
     val strokeGeometry: List<StrokeGeometry>? = null,
     val strokeWeight: Int,
     val strokes: List<Any>,
+    /**These constraints inside [VectorDrawConst.ChildType]*/
     val type: String
-)
+) {
+    /**Call only if this is [VectorDrawConst.ChildType.VECTOR] type*/
+    fun get1stSolidBgColor() = fills[0].color?.let { get255BaseColor(it) }
+
+    /**Call only if this is [VectorDrawConst.ChildType.VECTOR] type*/
+    fun get1stGeometricPath() = fillGeometry?.get(0)?.path
+
+    fun getTLMargin() = PointF(relativeTransform[0][2].toFloat(), relativeTransform[1][2].toFloat())
+
+    private fun get255BaseColor(colorRGBA: ColorRGBA): Int {
+        logD("colorRGBA: $colorRGBA")
+        with(colorRGBA) { return toColorInt(a, r, g, b) }
+        //with(colorRGBA) { return Color.argb(a.toFloat(), r.toFloat(), g.toFloat(), b.toFloat()) }
+    }
+
+}

@@ -1,3 +1,8 @@
 package com.example.testproject.utilsAndData.model.figmaModel.components
 
-data class Components(val sampleData: Boolean)
+import com.google.gson.annotations.SerializedName
+
+data class Components(
+    @SerializedName("32:14")
+    val _3214: X3214
+)
