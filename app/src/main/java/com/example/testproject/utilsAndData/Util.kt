@@ -1,9 +1,9 @@
 package com.example.testproject.utilsAndData
 
 import android.util.Log
-import android.util.Size
 import androidx.annotation.FloatRange
 import com.example.testproject.utilsAndData.model.figmaModel.SizeX
+import com.learner.codereducer.utils.GSonUtils
 
 fun logD(msg: String) = Log.d("xyz", msg)
 
@@ -20,7 +20,7 @@ fun toColorInt(
 }
 
 
-fun main(args: Array<String>) {
+fun main() {
     val x = "a@bc.d...123.@%^%^$&".replace(
         "[^a-zA-Z0-9.]+".toRegex(),
         "r"

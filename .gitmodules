@@ -1,0 +1,3 @@
+[submodule "code-reducer"]
+	path = code-reducer
+	url = https://gitlab.com/android-project12/library/code-reducer.git

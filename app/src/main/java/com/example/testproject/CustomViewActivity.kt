@@ -5,10 +5,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.caverock.androidsvg.SVG
 import com.example.testproject.databinding.ActivityCustomViewBinding
-import com.example.testproject.utilsAndData.GSonUtils
 import com.example.testproject.utilsAndData.data.FigmaJs
 import com.example.testproject.utilsAndData.logD
 import com.example.testproject.utilsAndData.model.figmaModel.FigmaJson
+import com.learner.codereducer.utils.GSonUtils
 
 class CustomViewActivity : AppCompatActivity() {
     lateinit var binding: ActivityCustomViewBinding

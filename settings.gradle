@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "TestProject"
 include ':app'
 include ':androidsvg'
+include ':code-reducer'
