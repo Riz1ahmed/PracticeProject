@@ -6,6 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".CustomViewActivity">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Image from Base64 Img str"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_from_base64"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_100sdp"
+        android:background="#F8FFB2"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My SVG Renderer"
+        app:layout_constraintBottom_toTopOf="@+id/custom_view"
+        app:layout_constraintEnd_toEndOf="@+id/custom_view"
+        app:layout_constraintStart_toStartOf="@+id/custom_view" />
+
     <com.example.testproject.utilsAndData.CustomView
         android:id="@+id/custom_view"
         android:layout_width="wrap_content"
@@ -15,6 +42,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Image from svg"
+        app:layout_constraintBottom_toTopOf="@+id/image_view"
+        app:layout_constraintEnd_toEndOf="@+id/image_view"
+        app:layout_constraintStart_toStartOf="@+id/image_view" />
 
     <ImageView
         android:id="@+id/image_view"
