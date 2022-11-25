@@ -19,6 +19,8 @@ fun toColorInt(
             ((blue * 255 + .5).toInt()))
 }
 
+fun Float.toBoolean() = (this > 0)
+
 
 fun main() {
     val x = "a@bc.d...123.@%^%^$&".replace(
