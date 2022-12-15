@@ -2,10 +2,11 @@ package com.example.testproject
 
 import android.graphics.drawable.PictureDrawable
 import android.os.Bundle
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.caverock.androidsvg.SVG
 import com.example.testproject.databinding.ActivityCustomViewBinding
-import com.example.testproject.utilsAndData.data.FigmaJs
 import com.example.testproject.utilsAndData.data.ImageBase64Str
 import com.example.testproject.utilsAndData.logD
 import com.example.testproject.utilsAndData.model.figmaModel.FigmaJson
@@ -21,13 +22,29 @@ class CustomViewActivity : AppCompatActivity() {
         setContentView(binding.root)
         loadBase64Image()
 
+        loadCustomView()
+
+
+        loadSvgBy_androidsvg()
+    }
+
+    private fun loadCustomView() {
         //val figmaJson = GSonUtils.fromJson<FigmaJson>(FigmaJs.figmaSample)
         //logD("Json: $figmaJson")
         val jsonStr = loadJsonFromAsset("json/sample.js")
         binding.customView.setJsonInvalidate(jsonStr)
 
+        binding.sbScaleCustomView.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val scale = progress.toFloat() / 100
+                binding.customView.scaleX = scale
+                binding.customView.scaleY = scale
+            }
 
-        loadSvgBy_androidsvg()
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
     }
 
     private fun loadBase64Image() {
