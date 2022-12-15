@@ -1,12 +1,12 @@
 package com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.children
 
-import android.graphics.Color
 import android.graphics.PointF
 import com.example.testproject.utilsAndData.data.VectorDrawConst
 import com.example.testproject.utilsAndData.logD
 import com.example.testproject.utilsAndData.model.figmaModel.SizeX
 import com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.children.fillX.FillX
 import com.example.testproject.utilsAndData.toColorInt
+import kotlin.math.abs
 
 //Frame. Type: FRAME.
 //Group. Type: Group
@@ -54,6 +54,11 @@ data class Children(
     fun get1stGeometricPath() = fillGeometry?.get(0)?.path
 
     fun getTLMargin() = PointF(relativeTransform[0][2].toFloat(), relativeTransform[1][2].toFloat())
+    fun getTLMargin(parentAbsPos: AbsoluteBoundingBox) =
+        PointF(
+            abs(parentAbsPos.x - absoluteBoundingBox.x).toFloat(),
+            abs(parentAbsPos.y - absoluteBoundingBox.y).toFloat()
+        )
 
     private fun get255BaseColor(colorRGBA: ColorRGBA): Int {
         logD("colorRGBA: $colorRGBA")

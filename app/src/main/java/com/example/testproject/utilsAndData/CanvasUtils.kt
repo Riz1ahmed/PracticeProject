@@ -21,67 +21,6 @@ object CanvasUtils {
         path: Path, svgPath: SVGPath, absPos: PointF, lastPos: PointF
     ) {
         svgPath.toPath(absPos, lastPos, path)
-        //path.addPath(svgPath.toPath(absPos, lastPos))
-        //logD("type=$type, data=$data")
-        /*when (type) {
-            SVGPath.PathTypes.move ->
-                path.moveTo(data[0] + absPos.x, data[1] + absPos.y)
-            SVGPath.PathTypes.line ->
-                path.lineTo(data[0] + absPos.x, data[1] + absPos.y)
-            SVGPath.PathTypes.hLine ->
-                path.lineTo(data[0] + absPos.x, 0f + absPos.y)//not 0 will be last pos
-            SVGPath.PathTypes.vLine ->
-                path.lineTo(0f + absPos.x, data[0] + absPos.y)//not 0 will be last pos
-            SVGPath.PathTypes.cubic ->
-                path.cubicTo(
-                    data[0] + absPos.x, data[1] + absPos.y,
-                    data[2] + absPos.x, data[3] + absPos.y,
-                    data[4] + absPos.x, data[5] + absPos.y
-                )
-            //PathTypes.smoothCubic -> path.rCubicTo(oldQValue,lastQValu,data[0],data[1])
-            SVGPath.PathTypes.quad -> path.quadTo(
-                data[0] + absPos.x, data[1] + absPos.y,
-                data[2] + absPos.x, data[3] + absPos.y
-            )
-            //PathTypes.smoothQuad -> path.rQuadTo(oldQValue,lastQValu,data[0], data[1])
-            //PathTypes.arc -> path.arcTo(0f, 0f, 50f, 80f, 0f, 45f, true)
-            SVGPath.PathTypes.stop -> path.close()
-
-            SVGPath.PathTypes.rMove ->
-                path.rMoveTo(data[0] + absPos.x, data[1] + absPos.y)
-            SVGPath.PathTypes.rLine ->
-                path.rLineTo(data[0] + absPos.x, data[1] + absPos.y)
-            SVGPath.PathTypes.rHLine -> path.rLineTo(data[0] + absPos.x, 0f)
-            SVGPath.PathTypes.rVLine -> path.rLineTo(0f, data[0] + absPos.y)
-            SVGPath.PathTypes.rCubic -> SVGPathUtil.arcTo(
-                lastX = lastPos!!.x, lastY = lastPos.y,
-                rx = data[0], ry = data[0],
-                angle = data[0],
-                largeArcFlag = data[0].toBoolean(), sweepFlag = data[0].toBoolean(),
-                x = data[0], y = data[0],
-                path = path
-            )
-            *//*path.rCubicTo(
-                data[0] + absPos.x, data[1] + absPos.y,
-                data[2] + absPos.x, data[3] + absPos.y,
-                data[4] + absPos.x, data[5] + absPos.y
-            )*//*
-            //PathTypes.rSmoothCubic -> path.rCubicTo(oldQValue,lastQValu,data[0],data[1])
-            SVGPath.PathTypes.rQuad -> path.rQuadTo(
-                data[0] + absPos.x, data[1] + absPos.y,
-                data[2] + absPos.x, data[3] + absPos.y
-            )
-            //PathTypes.rSmoothQuad -> path.rQuadTo(oldQValue,lastQValu,data[0], data[1])
-            SVGPath.PathTypes.rArc -> SVGPathUtil.arcTo(
-                lastX = lastPos!!.x, lastY = lastPos.y,
-                rx = data[0], ry = data[0],
-                angle = data[0],
-                largeArcFlag = data[0].toBoolean(), sweepFlag = data[0].toBoolean(),
-                x = data[0], y = data[0],
-                path = path
-            )
-            SVGPath.PathTypes.rStop -> path.close()
-        }*/
     }
 
     /**Pass a SVG/XML/Figma path data and get a [Path] object contain this data */

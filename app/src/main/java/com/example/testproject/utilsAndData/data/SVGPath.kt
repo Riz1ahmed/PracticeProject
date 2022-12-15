@@ -6,23 +6,33 @@ import android.graphics.PointF
 import com.example.testproject.utilsAndData.logD
 import kotlin.math.*
 
+/**
+ * For svg pathData object.
+ * @param type this value only from [PathTypes]. Other char value will be not applicable
+ * @param data This is path data which is some float value.
+ * */
 data class SVGPath(
     val type: Char,
     val data: List<Float>
 ) {
     /**
-     * @param absPos if want to move from current position, pass here the left and right margin values
+     * Convert this [SVGPath] to [Path] object
+     *
+     * @param absPos If want to move from current position, pass here the left and right margin values.
+     * Otherwise this path's initial position will be from 0,0 position.
      * @param lastPos This value must be need if [type] one of cubic,rCubic,quad,rQuad,hLine,vLine.
-     * Please pass null if other type.
+     * If not from those type, this value is useless (So this time you can pass null).
+     * @param path Existing/before/last path data, with which this path will be connected.
+     * If it's new (haven't any existing path) Please create a new path object and pass it.
      */
-    fun toPath(absPos: PointF = PointF(0f, 0f), lastPos: PointF, path: Path): Path {
+    fun toPath(absPos: PointF = PointF(0f, 0f), lastPos: PointF?, path: Path): Path {
         logD("current Type: $type, data: $data")
         //val path = Path()//.apply { moveTo(lastPos.x, lastPos.y) }
         when (type) {
             PathTypes.move -> path.moveTo(data[0] + absPos.x, data[1] + absPos.y)
             PathTypes.line -> path.lineTo(data[0] + absPos.x, data[1] + absPos.y)
-            PathTypes.hLine -> path.lineTo(data[0] + absPos.x, lastPos.y + absPos.y)
-            PathTypes.vLine -> path.lineTo(lastPos.x + absPos.x, data[0] + absPos.y)
+            PathTypes.hLine -> path.lineTo(data[0] + absPos.x, lastPos!!.y + absPos.y)
+            PathTypes.vLine -> path.lineTo(lastPos!!.x + absPos.x, data[0] + absPos.y)
             PathTypes.cubic ->
                 path.cubicTo(
                     data[0] + absPos.x, data[1] + absPos.y,
@@ -36,7 +46,7 @@ data class SVGPath(
             )
             //PathTypes.smoothQuad -> path.rQuadTo(oldQValue,lastQValu,data[0], data[1])
             PathTypes.arc -> arcTo(
-                lastX = lastPos.x, lastY = lastPos.y,
+                lastX = lastPos!!.x, lastY = lastPos.y,
                 //lastX = 100f, lastY = 290f,
                 rx = data[0], ry = data[1],
                 angle = data[2],
@@ -62,7 +72,7 @@ data class SVGPath(
             )
             //PathTypes.rSmoothQuad -> path.rQuadTo(oldQValue,lastQValu,data[0], data[1])
             PathTypes.rArc -> arcTo(
-                lastX = lastPos.x, lastY = lastPos.y,
+                lastX = lastPos!!.x, lastY = lastPos.y,
                 rx = data[0], ry = data[1],
                 angle = data[2],
                 largeArcFlag = data[3].toBoolean(), sweepFlag = data[4].toBoolean(),
@@ -288,7 +298,10 @@ data class SVGPath(
     private fun Float.toBoolean() = this > 0
 
     /**
-     * @see [Detail](http://www.w3.org/TR/SVG/paths.html)
+     * Types of SVG paths. see, every types has uppercase and lowercase letter.
+     * Uppercase means absolute position, lowercase means relative position.
+     *
+     * See all of them documentation here: http://www.w3.org/TR/SVG/paths.html
      * */
     object PathTypes {
         /**2 value
@@ -305,47 +318,49 @@ data class SVGPath(
 
         /**1 value
          * x
-         * From current position to this x position draw a horizontal line*/
+         * From current position to this (x) position draw a horizontal line*/
         const val hLine = 'H'
         const val rHLine = 'h'
         /**1 value
          * y
-         * From current position to this y position draw a vertical line*/
+         * From current position to this (y) position draw a vertical line*/
         const val vLine = 'V'
         const val rVLine = 'v'
 
         /**6 value
          * x1,y1, x2,y2, x,y
-         * Draw a Bézier curve to position x,y position followed by (x1,y1) & (x2,y2) point*/
+         * Draw a Bézier curve to (x,y) position followed by (x1,y1) & (x2,y2) point*/
         const val cubic = 'C'
         const val rCubic = 'c'
         /**4 value
-         * x2,y2
-         * x,y
+         * x2,y2 x,y
          * Draw a Bézier curve from current position to position (x,y) position followed by
          * before Cubic (x2,y2) value as (x1,y1) & (x2,y2) point.
-         * So before this (Smooth cubic) must be Cubic*/
+         * So before this (Smooth cubic) must be a (smooth) Cubic*/
         const val smoothCubic = 'S'
         const val rSmoothCubic = 's'
 
         /**4 value
-         * x1,y1,
-         * x,y
+         * x1,y1, x,y
          * Draws a quadratic Bézier curve from the current point to (x,y) followed by (x1,y1)*/
         const val quad = 'Q'
         const val rQuad = 'q'
         /***2 value
          * x,y
          * Draws a quadratic Bézier curve from the current point to (x,y) followed by last
-         * quadratic Bézier curve (x1,y1) value*/
+         * quadratic Bézier curve (x1,y1) value.
+         * So before this (Smooth Quad) must be a (smooth) Quad*/
         const val smoothQuad = 'T'
         const val rSmoothQuad = 't'
         /**6 value
          * rx,ry,largeArcFlag,sweepFlag,x,y
          * Draw an arc from current position to (x,y) position followed by:
-         * (rx,ry): Radius
-         * largeArcFlag: Whether draw the large side arc
-         * sweepFlag: Will flip or not.
+         *
+         * Where,
+         * - (rx,ry): Radius.
+         * - largeArcFlag: Whether draw the large side arc
+         * - sweepFlag: Will flip or not.
+         * - x,y: destination point.
          * */
         const val arc = 'A'
         const val rArc = 'a'

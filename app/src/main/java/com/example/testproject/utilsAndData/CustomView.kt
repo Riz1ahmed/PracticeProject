@@ -7,9 +7,9 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.Size
 import android.view.View
-import com.example.testproject.utilsAndData.data.SVGPath
 import com.example.testproject.utilsAndData.data.VectorDrawConst
 import com.example.testproject.utilsAndData.model.figmaModel.FigmaJson
+import com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.children.AbsoluteBoundingBox
 import com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.children.Children
 
 class CustomView(context: Context, attributeSet: AttributeSet) : View(context, attributeSet) {
@@ -19,6 +19,7 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
 
     //Draw using this FigmaJson
     private var fJson: FigmaJson? = null
+    private lateinit var absoluteBoundingBox: AbsoluteBoundingBox
 
     private val canvasSize = Size(400, 400)
     private val bg = ColorDrawable(Color.YELLOW)
@@ -46,10 +47,10 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        drawPathData(moneyPath, PointF(10f,10f),paint,canvas!!)//Draw here right side imminently
-        //fJson?.let { canvas?.let { drawFromJson(fJson!!, canvas) } }
+        //drawPathData(moneyPath, PointF(10f,10f),paint,canvas!!)//Draw here right side imminently
+        fJson?.let { canvas?.let { drawFromJson(fJson!!, canvas) } }
 
-        myTestDraw(canvas!!)
+        //myTestDraw(canvas!!)
     }
 
     private fun myTestDraw(canvas: Canvas) {
@@ -81,7 +82,11 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
 
     private fun drawFromJson(figmaJson: FigmaJson, canvas: Canvas) {
         //val json = GSonUtils.fromJson<FigmaJson>(FigmaJs.figmaSample)
-        figmaJson.get1stPage().children.forEach { findPathData(it, canvas) }
+        //figmaJson.get1stPage().children.forEach { findPathData(it, canvas) }
+
+        val frame = figmaJson.get1stFrame()
+        absoluteBoundingBox = frame.absoluteBoundingBox
+        findPathData(frame, canvas)
     }
 
     private fun findPathData(children: Children, canvas: Canvas) {
@@ -91,9 +96,9 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
 
             val fillGeometry = children.get1stGeometricPath()!!
             val fillColor = children.get1stSolidBgColor()
-            val lrBound = children.getTLMargin()
+            val absPos = children.getTLMargin(absoluteBoundingBox)
             paint.color = fillColor ?: Color.BLACK
-            drawPathData(fillGeometry, lrBound, paint, canvas)
+            drawPathData(fillGeometry, absPos, paint, canvas)
 
 
             val strokeGeometry = children.strokeGeometry
@@ -109,11 +114,11 @@ class CustomView(context: Context, attributeSet: AttributeSet) : View(context, a
 
     /**
      * @param pathData It's coded pathData. ex: 'M12.0 0 L15 2....'
-     * @param lrMargin Left and Top margin/transition where draw this path.
+     * @param absPos Left and Top margin/transition where draw this path.
      * @param color With which color to draw this path.
      * */
-    private fun drawPathData(pathData: String, lrMargin: PointF, paint: Paint, canvas: Canvas) {
-        val path = CanvasUtils.getPathFromPathData(pathData, lrMargin)
+    private fun drawPathData(pathData: String, absPos: PointF, paint: Paint, canvas: Canvas) {
+        val path = CanvasUtils.getPathFromPathData(pathData, absPos)
         pathDrawOnCanvas(canvas, path, paint)
     }
 

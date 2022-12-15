@@ -1,6 +1,7 @@
 package com.example.testproject.utilsAndData.model.figmaModel
 
 import com.example.testproject.utilsAndData.model.figmaModel.document.Document
+import com.example.testproject.utilsAndData.model.figmaModel.document.figmaPage.children.Children
 
 data class FigmaJson(
     //val componentSets: ComponentSets,
@@ -17,4 +18,8 @@ data class FigmaJson(
     val version: String
 ) {
     fun get1stPage() = document.figmaPages[0]
+    fun get1stFrame(): Children {
+        val page1st = document.figmaPages[0]
+        return page1st.children[0]
+    }
 }

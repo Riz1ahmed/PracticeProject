@@ -19,15 +19,15 @@ class CustomViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCustomViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val figmaJson = GSonUtils.fromJson<FigmaJson>(FigmaJs.figmaSample)
-        //logD("Json: $figmaJson")
-        loadAssetJson()
-        binding.customView.setJsonInvalidate(figmaJson)
-
-        loadSvg()
-
         loadBase64Image()
+
+        //val figmaJson = GSonUtils.fromJson<FigmaJson>(FigmaJs.figmaSample)
+        //logD("Json: $figmaJson")
+        val jsonStr = loadJsonFromAsset("json/sample.js")
+        binding.customView.setJsonInvalidate(jsonStr)
+
+
+        loadSvgBy_androidsvg()
     }
 
     private fun loadBase64Image() {
@@ -35,15 +35,18 @@ class CustomViewActivity : AppCompatActivity() {
         binding.imgFromBase64.setImageBitmap(bp)
     }
 
-    private fun loadAssetJson() {
-        val str = GSonUtils.loadJsonFromAsset(assets, "json/FigmaJson.js")
+    /**
+     * Load figma json.
+     * @param path Contain folders & extension. eg: "json/FigmaJson.js"*/
+    private fun loadJsonFromAsset(path: String): FigmaJson {
+        val str = GSonUtils.loadJsonFromAsset(assets, path)
         val figmaJson = GSonUtils.fromJson<FigmaJson>(str)
         logD("FigmaJson: $figmaJson")
-        //logD("JsonStr: $str")
+        return figmaJson
     }
 
-    private fun loadSvg() {
-        val svg = SVG.getFromAsset(assets, "svg/recipe.svg")
+    private fun loadSvgBy_androidsvg() {
+        val svg = SVG.getFromAsset(assets, "svg/crypto.svg")
         val pd = PictureDrawable(svg.renderToPicture())
         binding.imageView.setImageDrawable(pd)
     }
